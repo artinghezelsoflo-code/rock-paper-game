@@ -1,80 +1,204 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سنگ کاغذ قیچی</title>
+<title>سنگ کاغذ قیچی | کلاس ۷/۲</title>
+
 <style>
+* { box-sizing: border-box; }
+
 body {
-    background: linear-gradient(135deg, #10152e, #273c75);
+    background: linear-gradient(135deg,#10152e,#273c75);
     color: white;
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
     text-align: center;
-    padding: 30px 10px;
+    padding: 25px 12px;
+    margin: 0;
 }
+
 .container {
-    max-width: 450px;
+    max-width: 500px;
     margin: auto;
     background: #202b50;
-    padding: 25px;
-    border-radius: 20px;
+    padding: 25px 15px;
+    border-radius: 22px;
+    box-shadow: 0 10px 35px #0006;
 }
+
 h1 { color: #ffd166; }
+
+.names {
+    color: #06d6a0;
+    line-height: 2.2;
+    font-size: 15px;
+}
+
+.class {
+    color: #ffd166;
+    font-weight: bold;
+}
+
 .score {
     display: flex;
     justify-content: space-around;
     font-size: 20px;
     margin: 30px 0;
-}
-button {
-    font-size: 24px;
-    padding: 15px 20px;
-    margin: 7px;
-    border: none;
+    background: #141d3b;
+    padding: 18px 5px;
     border-radius: 15px;
+}
+
+button {
+    font-size: 21px;
+    padding: 15px 17px;
+    margin: 6px;
+    border: none;
+    border-radius: 14px;
     cursor: pointer;
     background: #ffd166;
+    transition: 0.2s;
 }
-button:hover { background: #ffb703; }
+
+button:hover {
+    background: #ffb703;
+    transform: scale(1.05);
+}
+
+button:active { transform: scale(.96); }
+
 #result {
-    font-size: 20px;
+    font-size: 18px;
     margin: 25px 0;
+    min-height: 35px;
+    line-height: 1.8;
 }
+
+#winner {
+    color: #ffd166;
+}
+
 .reset {
     background: #06d6a0;
     font-size: 17px;
 }
+
+.footer {
+    color: #aab5d5;
+    font-size: 12px;
+    margin-top: 25px;
+}
 </style>
 </head>
+
 <body>
 <div class="container">
 
 <h1>🎮 سنگ کاغذ قیچی</h1>
-<h3 style="color:#ffd166;">آرتین قزل سوفلو</h3>
-<p style="color:#06d6a0;">کلاس ۷/۲</p>
 
-<p>به بازی من خوش آمدید!</p>
+<h3 style="color:#ffd166;">سازندگان بازی</h3>
+
+<div class="names">
+آرتین قزل سوفلو<br>
+امیررضا خرقانی<br>
+سید حمیدرضا منافی<br>
+آدرین شاهسون<br>
+امیرمهدی قیدر<br>
+یاسین سرفراز
+</div>
+
+<p class="class">کلاس ۷/۲</p>
+
+<hr style="border-color:#455477">
+
+<p>به بازی ما خوش آمدید! 🎉</p>
+<p>برای برنده شدن باید به ۵ امتیاز برسی.</p>
 
 <div class="score">
-    <div>👤 شما<br>{{ player }}</div>
-    <div>🤖 کامپیوتر<br>{{ computer }}</div>
+<div>👤 شما<br><span id="player">0</span></div>
+<div>🤖 کامپیوتر<br><span id="computer">0</span></div>
 </div>
 
 <h3>انتخاب کن:</h3>
 
-<form method="POST">
-    <button name="choice" value="سنگ">🪨 سنگ</button>
-    <button name="choice" value="کاغذ">📄 کاغذ</button>
-    <button name="choice" value="قیچی">✂️ قیچی</button>
-</form>
+<button onclick="play('سنگ')">🪨 سنگ</button>
+<button onclick="play('کاغذ')">📄 کاغذ</button>
+<button onclick="play('قیچی')">✂️ قیچی</button>
 
-<div id="result">{{ result }}</div>
-<h2>{{ winner }}</h2>
+<div id="result">منتظر انتخاب تو هستم!</div>
 
-<a href="/reset">
-<button class="reset">🔄 بازی مجدد</button>
-</a>
+<h2 id="winner"></h2>
+
+<button class="reset" onclick="resetGame()">
+🔄 بازی مجدد
+</button>
+
+<div class="footer">
+ساخته شده توسط اعضای کلاس ۷/۲ ❤️
+</div>
 
 </div>
+
+<script>
+let player = 0;
+let computer = 0;
+let finished = false;
+
+function play(choice) {
+    if (finished) return;
+
+    const choices = ["سنگ", "کاغذ", "قیچی"];
+    const bot = choices[Math.floor(Math.random() * 3)];
+
+    let result = "";
+
+    if (choice === bot) {
+        result = "مساوی شد! 🤝";
+    }
+    else if (
+        (choice === "سنگ" && bot === "قیچی") ||
+        (choice === "کاغذ" && bot === "سنگ") ||
+        (choice === "قیچی" && bot === "کاغذ")
+    ) {
+        player++;
+        result = "🎉 تو برنده این دور شدی!";
+    }
+    else {
+        computer++;
+        result = "🤖 کامپیوتر برنده این دور شد!";
+    }
+
+    document.getElementById("player").textContent = player;
+    document.getElementById("computer").textContent = computer;
+
+    document.getElementById("result").textContent =
+        result + " انتخاب کامپیوتر: " + bot;
+
+    if (player === 5) {
+        document.getElementById("winner").textContent =
+            "🏆 تو برنده نهایی شدی!";
+        finished = true;
+    }
+    else if (computer === 5) {
+        document.getElementById("winner").textContent =
+            "🤖 کامپیوتر برنده نهایی شد!";
+        finished = true;
+    }
+}
+
+function resetGame() {
+    player = 0;
+    computer = 0;
+    finished = false;
+
+    document.getElementById("player").textContent = 0;
+    document.getElementById("computer").textContent = 0;
+    document.getElementById("result").textContent =
+        "منتظر انتخاب تو هستم!";
+    document.getElementById("winner").textContent = "";
+}
+</script>
+
 </body>
 </html>
